@@ -34,6 +34,7 @@ THIRD_PARTY_APPS = [
     'corsheaders',
     'django_filters',
     'drf_spectacular',
+    'drf_yasg',
     'django_extensions',
 ]
 
@@ -207,6 +208,34 @@ SPECTACULAR_SETTINGS = {
         {'name': 'laboratory', 'description': 'Laboratory management'},
         {'name': 'billing', 'description': 'Billing and payments'},
     ],
+}
+
+# drf-yasg (Swagger / ReDoc UI)
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+            'description': 'JWT Authorization header. Example: "Bearer <token>"',
+        }
+    },
+    'USE_SESSION_AUTH': False,
+    'JSON_EDITOR': True,
+    'SUPPORTED_SUBMIT_METHODS': ['get', 'post', 'put', 'patch', 'delete'],
+    'OPERATIONS_SORTER': 'alpha',
+    'TAGS_SORTER': 'alpha',
+    'DOC_EXPANSION': 'none',
+    'DEFAULT_MODEL_RENDERING': 'example',
+    'SHOW_REQUEST_HEADERS': True,
+    'VALIDATOR_URL': None,
+}
+
+REDOC_SETTINGS = {
+    'LAZY_RENDERING': True,
+    'HIDE_HOSTNAME': False,
+    'EXPAND_RESPONSES': 'all',
+    'PATH_IN_MIDDLE': False,
 }
 
 # Channel Layers (Django Channels / WebSocket)
