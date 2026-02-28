@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import CategoryViewSet, ItemViewSet, StoreViewSet, StoreItemViewSet, StockTransferViewSet
+from .views import CategoryViewSet, ItemViewSet, StoreViewSet, StoreItemViewSet, StockTransferViewSet, barcode_scan
 
 router = DefaultRouter()
 router.register('categories', CategoryViewSet, basename='category')
@@ -10,5 +10,6 @@ router.register('store-items', StoreItemViewSet, basename='storeitem')
 router.register('stock-transfers', StockTransferViewSet, basename='stocktransfer')
 
 urlpatterns = [
+    path('barcode-scan/', barcode_scan, name='inventory-barcode-scan'),
     path('', include(router.urls)),
 ]

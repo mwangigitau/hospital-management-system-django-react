@@ -17,6 +17,7 @@ class Category(TimeStampedModel):
 
 class Item(SoftDeleteModel):
     name = models.CharField(max_length=200)
+    barcode = models.CharField(max_length=100, unique=True, blank=True, null=True, db_index=True)
     category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='items')
     unit = models.CharField(max_length=50)
     reorder_level = models.PositiveIntegerField(default=5)

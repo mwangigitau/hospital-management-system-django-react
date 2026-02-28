@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import DrugViewSet, DrugBatchViewSet, StockMovementViewSet, PrescriptionItemViewSet
+from .views import DrugViewSet, DrugBatchViewSet, StockMovementViewSet, PrescriptionItemViewSet, barcode_scan
 
 router = DefaultRouter()
 router.register('drugs', DrugViewSet, basename='drug')
@@ -9,5 +9,6 @@ router.register('stock-movements', StockMovementViewSet, basename='stockmovement
 router.register('prescription-items', PrescriptionItemViewSet, basename='prescriptionitem')
 
 urlpatterns = [
+    path('barcode-scan/', barcode_scan, name='pharmacy-barcode-scan'),
     path('', include(router.urls)),
 ]

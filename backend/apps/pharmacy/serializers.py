@@ -5,7 +5,7 @@ from .models import Drug, DrugBatch, StockMovement, PrescriptionItem
 class DrugSerializer(serializers.ModelSerializer):
     class Meta:
         model = Drug
-        fields = ['id', 'name', 'generic_name', 'category', 'unit', 'reorder_level',
+        fields = ['id', 'name', 'barcode', 'generic_name', 'category', 'unit', 'reorder_level',
                   'description', 'is_controlled', 'created_at', 'updated_at']
         read_only_fields = ['id', 'created_at', 'updated_at']
 
