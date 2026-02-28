@@ -11,6 +11,7 @@ class Drug(SoftDeleteModel):
     ]
 
     name = models.CharField(max_length=200)
+    barcode = models.CharField(max_length=100, unique=True, blank=True, null=True, db_index=True)
     generic_name = models.CharField(max_length=200, blank=True)
     category = models.CharField(max_length=30, choices=CATEGORIES, default='other')
     unit = models.CharField(max_length=50, help_text='e.g. tablets, ml, capsules')
