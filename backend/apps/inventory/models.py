@@ -1,6 +1,6 @@
-import uuid
 from django.db import models
 from utils.models import TimeStampedModel, SoftDeleteModel
+from utils.uuid import uuid7
 
 
 class Category(TimeStampedModel):
@@ -61,7 +61,7 @@ class StoreItem(TimeStampedModel):
 
 
 class StockTransferItem(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid7, editable=False)
     transfer = models.ForeignKey('StockTransfer', on_delete=models.CASCADE, related_name='transfer_items')
     item = models.ForeignKey(Item, on_delete=models.PROTECT)
     quantity = models.DecimalField(max_digits=10, decimal_places=2)

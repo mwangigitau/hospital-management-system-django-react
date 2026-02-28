@@ -35,6 +35,13 @@ class StockTransferItemInline(admin.TabularInline):
     extra = 0
 
 
+@admin.register(StockTransferItem)
+class StockTransferItemAdmin(admin.ModelAdmin):
+    list_display = ('transfer', 'item', 'quantity')
+    list_filter = ('transfer__status',)
+    search_fields = ('item__name', 'transfer__from_store__name', 'transfer__to_store__name')
+
+
 @admin.register(StockTransfer)
 class StockTransferAdmin(admin.ModelAdmin):
     list_display = ('from_store', 'to_store', 'status', 'created_at')
