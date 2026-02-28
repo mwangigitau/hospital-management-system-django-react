@@ -64,3 +64,7 @@ celerybeat.pid
 .Spotlight-V100
 .Trashes
 Thumbs.db
+
+# Node / Frontend
+node_modules/
+frontend/dist/

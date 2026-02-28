@@ -1,15 +1,18 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { AlertTriangle, Search } from 'lucide-react';
+import { AlertTriangle, Search, Pill } from 'lucide-react';
+import toast from 'react-hot-toast';
 import api from '../../lib/api';
 import DataTable from '../../components/common/DataTable';
 import Badge from '../../components/common/Badge';
 import Pagination from '../../components/common/Pagination';
+import BarcodeScanner from '../../components/common/BarcodeScanner';
 
 interface Drug {
   id: string;
   drug_code: string;
   name: string;
+  barcode: string | null;
   generic_name: string;
   quantity_in_stock: number;
   reorder_level: number;
@@ -26,12 +29,37 @@ export default function PharmacyPage() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [searchInput, setSearchInput] = useState('');
+  const [scanning, setScanning] = useState(false);
+  const [lastScanResult, setLastScanResult] = useState<{
+    drug_name: string;
+    quantity_dispensed: number;
+    batch_number: string;
+  } | null>(null);
 
   const { data, isLoading } = useQuery<PaginatedResponse>({
     queryKey: ['pharmacy-drugs', page, search],
     queryFn: () => api.get('/pharmacy/drugs/', { params: { page, search } }).then((r) => r.data),
     retry: false,
   });
+
+  const handleBarcodeScan = useCallback(async (barcode: string) => {
+    setScanning(true);
+    setLastScanResult(null);
+    try {
+      const res = await api.post('/pharmacy/barcode-scan/', { barcode });
+      setLastScanResult({
+        drug_name: res.data.drug?.name ?? barcode,
+        quantity_dispensed: res.data.quantity_dispensed,
+        batch_number: res.data.batch?.batch_number ?? '',
+      });
+      toast.success(`Dispensed: ${res.data.drug?.name}`);
+    } catch (err: unknown) {
+      const axiosErr = err as { response?: { data?: { detail?: string } } };
+      toast.error(axiosErr.response?.data?.detail || 'Scan failed');
+    } finally {
+      setScanning(false);
+    }
+  }, []);
 
   const lowStock = data?.results?.filter((d) => d.quantity_in_stock <= d.reorder_level) ?? [];
 
@@ -70,6 +98,20 @@ export default function PharmacyPage() {
       <div>
         <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Pharmacy</h1>
         <p className="text-sm text-gray-500 dark:text-gray-400">Drug stock management</p>
+      </div>
+
+      {/* Barcode Scanner Section */}
+      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-5 space-y-3">
+        <div className="flex items-center gap-2 mb-1">
+          <Pill className="w-5 h-5 text-primary-600 dark:text-primary-400" />
+          <h2 className="font-semibold text-gray-800 dark:text-white text-sm">Barcode Scanner — Dispense</h2>
+        </div>
+        <BarcodeScanner onScan={handleBarcodeScan} loading={scanning} placeholder="Scan drug barcode…" />
+        {lastScanResult && (
+          <div className="flex items-center gap-2 text-sm bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 rounded-lg px-4 py-2">
+            ✅ <strong>{lastScanResult.drug_name}</strong> — dispensed {lastScanResult.quantity_dispensed} (batch {lastScanResult.batch_number})
+          </div>
+        )}
       </div>
 
       {/* Low Stock Alerts */}
