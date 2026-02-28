@@ -48,6 +48,14 @@ class SoftDeleteModel(AuditModel):
         super().delete()
 
 
+class BranchScopedModel(SoftDeleteModel):
+    branch = models.CharField(max_length=100, db_index=True)
+    department = models.CharField(max_length=100, blank=True, db_index=True)
+
+    class Meta:
+        abstract = True
+
+
 class SoftDeleteManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(is_deleted=False)

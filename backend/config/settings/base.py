@@ -50,6 +50,21 @@ LOCAL_APPS = [
     'apps.inventory',
     'apps.laboratory',
     'apps.billing',
+    'apps.procurement',
+    'apps.radiology',
+    'apps.claims',
+    'apps.nhif_integration',
+    'apps.accounting',
+    'apps.emergency',
+    'apps.cssd',
+    'apps.fixed_assets',
+    'apps.reports',
+    'apps.system_admin',
+    'apps.helpdesk',
+    'apps.referrals',
+    'apps.vaccination',
+    'apps.queue_management',
+    'apps.fleet_management',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
