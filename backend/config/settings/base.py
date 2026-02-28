@@ -17,6 +17,7 @@ ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=Csv(
 
 # Application definition
 DJANGO_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -26,6 +27,7 @@ DJANGO_APPS = [
 ]
 
 THIRD_PARTY_APPS = [
+    'channels',
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
@@ -205,6 +207,18 @@ SPECTACULAR_SETTINGS = {
         {'name': 'laboratory', 'description': 'Laboratory management'},
         {'name': 'billing', 'description': 'Billing and payments'},
     ],
+}
+
+# Channel Layers (Django Channels / WebSocket)
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [config('REDIS_URL', default='redis://localhost:6379/0')],
+            'capacity': 1500,
+            'expiry': 10,
+        },
+    },
 }
 
 # Email

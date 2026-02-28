@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Bell, Sun, Moon, Menu, LogOut } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
+import { useNotificationStore } from '../../store/notificationStore';
+import NotificationPanel from '../common/NotificationPanel';
 
 interface HeaderProps {
   onMenuToggle: () => void;
@@ -8,7 +10,9 @@ interface HeaderProps {
 
 export default function Header({ onMenuToggle }: HeaderProps) {
   const { user, logout } = useAuthStore();
+  const unreadCount = useNotificationStore((s) => s.unreadCount);
   const [darkMode, setDarkMode] = useState(false);
+  const [notifOpen, setNotifOpen] = useState(false);
 
   const toggleDark = () => {
     setDarkMode(!darkMode);
@@ -29,10 +33,23 @@ export default function Header({ onMenuToggle }: HeaderProps) {
 
       <div className="flex items-center gap-2">
         {/* Notifications */}
-        <button className="relative p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-          <Bell className="w-5 h-5" />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full" />
-        </button>
+        <div className="relative">
+          <button
+            onClick={() => setNotifOpen((o) => !o)}
+            className="relative p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            aria-label="Notifications"
+          >
+            <Bell className="w-5 h-5" />
+            {unreadCount > 0 && (
+              <span className="absolute top-1 right-1 min-w-[16px] h-4 flex items-center justify-center bg-red-500 text-white text-[10px] font-bold rounded-full px-0.5 leading-none">
+                {unreadCount > 99 ? '99+' : unreadCount}
+              </span>
+            )}
+          </button>
+          {notifOpen && (
+            <NotificationPanel onClose={() => setNotifOpen(false)} />
+          )}
+        </div>
 
         {/* Dark mode toggle */}
         <button
