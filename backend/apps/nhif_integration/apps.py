@@ -4,4 +4,4 @@ from django.apps import AppConfig
 class NhifIntegrationConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'apps.nhif_integration'
-    verbose_name = 'Nhif Integration'
+    verbose_name = 'NHIF Integration'
